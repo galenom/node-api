@@ -27,7 +27,7 @@ exports.postNew = function(req, res) {
   }
 
   if (!_.isEmpty(message)) {
-    res.status(400).send(message);
+    res.status(400).send({ error: message});
     return;
   }
 
