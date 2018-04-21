@@ -1,9 +1,10 @@
 'use strict';
-const _ = require('lodash');
-const models = require('../../db/models');
+import _ from 'lodash';
+import models from '../../db/models';
+
 const User = models.User;
 
-exports.getAll = function(req, res) {
+export const getAll = function(req, res) {
   User.findAll({}).then((users) => {
     res.json(users);
   }).catch((e) => {
@@ -11,7 +12,7 @@ exports.getAll = function(req, res) {
   });
 }
 
-exports.postNew = function(req, res) {
+export const postNew = function(req, res) {
   let message;
   if (_.isUndefined(req.body.firstName) || !_.isString(req.body.firstName)) {
     console.log(req.body);
@@ -44,7 +45,7 @@ exports.postNew = function(req, res) {
   });
 }
 
-exports.getUserByID = function(req, res) {
+export const getUserByID = function(req, res) {
   User.findById(req.params.userId).then((user) => {
     res.json(user);
   }).catch((e) => {
@@ -52,10 +53,10 @@ exports.getUserByID = function(req, res) {
   });
 }
 
-exports.updateUser = function(req, res) {
+export const updateUser = function(req, res) {
   res.send('error');
 }
 
-exports.deleteUser = function(req, res) {
+export const deleteUser = function(req, res) {
   res.send('error');
 }
