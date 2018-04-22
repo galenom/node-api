@@ -1,6 +1,6 @@
-'use strict';
 import _ from 'lodash';
 import models from '../../db/models';
+import bcrypt from 'bcrypt';
 
 const User = models.User;
 
@@ -10,12 +10,11 @@ export const getAll = function(req, res) {
   }).catch((e) => {
     res.send(e);
   });
-}
+};
 
-export const postNew = function(req, res) {
+export const postNew = async function(req, res) {
   let message;
   if (_.isUndefined(req.body.firstName) || !_.isString(req.body.firstName)) {
-    console.log(req.body);
     message = 'Please provide a first name for the user';
   } else if (_.isUndefined(req.body.lastName) || !_.isString(req.body.lastName)) {
     message = 'Please provide a last name for the user';
@@ -27,8 +26,11 @@ export const postNew = function(req, res) {
     message = 'Please provide a password for the user';
   }
 
+  const hash = await bcrypt.hash(req.body.password, 10);
+  if (!hash) message = 'Error creating user account';
+
   if (!_.isEmpty(message)) {
-    res.status(400).send({ error: message});
+    res.status(400).send({ error: message });
     return;
   }
 
@@ -37,13 +39,13 @@ export const postNew = function(req, res) {
     lastName: req.body.lastName,
     email: req.body.email,
     username: req.body.username,
-    password: req.body.password
+    password: hash,
   }).then((user) => {
     res.json(user);
   }).catch((e) => {
     res.send(e);
   });
-}
+};
 
 export const getUserByID = function(req, res) {
   User.findById(req.params.userId).then((user) => {
@@ -51,12 +53,12 @@ export const getUserByID = function(req, res) {
   }).catch((e) => {
     res.send(e);
   });
-}
+};
 
 export const updateUser = function(req, res) {
   res.send('error');
-}
+};
 
 export const deleteUser = function(req, res) {
   res.send('error');
-}
+};
