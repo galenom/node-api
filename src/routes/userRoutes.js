@@ -1,11 +1,17 @@
+import { authUser, getAll, postNew, getUserByID, updateUser, deleteUser} from '../controllers/userController';
+
 export default function (app) {
-  var user = require('../controllers/userController');
+  
+
+  app.route('/auth')
+    .post(authUser);
+
   app.route('/users')
-    .get(user.getAll)
-    .post(user.postNew);
+    .get(getAll)
+    .post(postNew);
 
   app.route('/users/:userId')
-    .get(user.getUserByID)
-    .put(user.updateUser)
-    .delete(user.deleteUser);
+    .get(getUserByID)
+    .put(updateUser)
+    .delete(deleteUser);
 }
