@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import Sequelize from 'sequelize';
+import jwt from 'jsonwebtoken';
 
 import models from '../../db/models';
 
@@ -84,14 +85,16 @@ export const authUser = async function(req, res) {
   if (!user && _.isEmpty(errorMsg)) errorMsg = 'Invalid username/password';
 
   if (!_.isEmpty(errorMsg)) {
-    res.status(500).send({ error: errorMsg });
+    res.status(403).send({ error: errorMsg });
     return;
   }
 
   const isValid = await bcrypt.compare(password, user.password);
 
   if (isValid) {
-    res.status(200).send();
+    // TODO: Use environmental variable for secret key
+    const token = await jwt.sign({ username, email }, 'mysecret', { expiresIn: 60 });
+    res.status(200).send({ token });
   } else {
     res.status(401).send();
   }
